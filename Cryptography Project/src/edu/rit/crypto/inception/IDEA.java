@@ -81,7 +81,7 @@ public class IDEA implements BlockCipher {
 		// First subkeys are derived directly from the key
 		Packing.unpackLongBigEndian(this.lKey, this.z, 4);
 		Packing.unpackLongBigEndian(this.uKey, this.z, 0);
-		this.zIndex = this.z.length - 1;
+		this.zIndex = 0;
 	}
 	
 	/**
@@ -90,10 +90,10 @@ public class IDEA implements BlockCipher {
 	 */
 	private short nextSubkey()
 	{
-		if(this.zIndex < 0)
+		if(this.zIndex >= this.z.length)
 			GenerateNextSubkeys();
 		
-		return this.z[this.zIndex--];
+		return this.z[this.zIndex++];
 	}
 	
 	/**
@@ -103,7 +103,7 @@ public class IDEA implements BlockCipher {
 	 */
 	private void GenerateNextSubkeys()
 	{
-		this.zIndex = this.z.length - 1; // reset
+		this.zIndex = 0; // reset
 		
 		// Perform the cyclic 25-bit shift
 		long uShiftedBits = (this.uKey & 0xFFFFFF10) >>> 39;
@@ -187,7 +187,9 @@ public class IDEA implements BlockCipher {
 	 */
 	private short add(short a, short b)
 	{
-		return (short)((a + b) % SIXTEEN_BIT_MAX);
+		int x = a < 0 ? SIXTEEN_BIT_MAX + a : a; // 2's complement
+		int y = b < 0 ? SIXTEEN_BIT_MAX + b : b;
+		return (short)((x + y) % SIXTEEN_BIT_MAX);
 	}
 	
 	/**
@@ -200,12 +202,14 @@ public class IDEA implements BlockCipher {
 	 */
 	private short multiply(short a, short b)
 	{
-		int v1 = a;
-		int v2 = b;
-		if (v1 == 0) v1 = SIXTEEN_BIT_MAX;
-		if (v2 == 0) v2 = SIXTEEN_BIT_MAX;
+		long x = a < 0 ? SIXTEEN_BIT_MAX + a : a; // 2's complement
+	    long y = b < 0 ? SIXTEEN_BIT_MAX + b : b;
 		
-		int result = (v1 * v2) % (SIXTEEN_BIT_MAX + 1);
+		// Have to treat 0 as 2^16
+		if (x == 0) x = SIXTEEN_BIT_MAX;
+		if (y == 0) y = SIXTEEN_BIT_MAX;
+		
+		long result = (x * y) % (SIXTEEN_BIT_MAX + 1);
 		
 		return result == SIXTEEN_BIT_MAX ? 0 : (short)result; 
 	}
