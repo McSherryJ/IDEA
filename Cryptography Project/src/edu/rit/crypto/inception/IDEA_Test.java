@@ -49,7 +49,7 @@ public class IDEA_Test
 		byte[] c = new byte[cipher.blockSize()];
 		Packing.unpackShortBigEndian(new short[]{4603, -4821, 408, 28133}, 0, c, 0, 4);
 		System.out.println("Ciphertext: " + Hex.toString(c));
-		System.out.println("Did the first test pass? " + Hex.toString(c).equalsIgnoreCase(Hex.toString(p)));
+		System.out.println("Did the second test pass? " + Hex.toString(c).equalsIgnoreCase(Hex.toString(p)));
 		
 	}
 

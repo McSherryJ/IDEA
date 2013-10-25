@@ -18,14 +18,7 @@ public class IDEA implements BlockCipher {
 	private static final int SIXTEEN_BIT_MAX = (int)Math.pow(2, 16);
 	
 	/**
-	 * The user-defined 16-byte secret key divided
-	 * between 2 longs
-	 */
-	private long uKey;
-	private long lKey;
-	
-	/**
-	 * The derived 16-bit/2-byte (short) subkeys
+	 * An array of the generated 16-bit/2-byte (short) subkeys
 	 */
 	private short[] z;
 	
@@ -39,9 +32,7 @@ public class IDEA implements BlockCipher {
 	 */
 	public IDEA()
 	{
-		this.uKey = 0;
-		this.lKey = 0;
-		this.z = new short[8];
+		this.z = new short[56];
 		this.zIndex = 0;
 	}
 	
@@ -75,13 +66,12 @@ public class IDEA implements BlockCipher {
 	public void setKey(byte[] key) {
 		if(key.length < keySize()) return;
 		
-		this.uKey = Packing.packLongBigEndian(key, 0);
-		this.lKey = Packing.packLongBigEndian(key, 8);
-		
-		// First subkeys are derived directly from the key
-		Packing.unpackLongBigEndian(this.lKey, this.z, 4);
-		Packing.unpackLongBigEndian(this.uKey, this.z, 0);
 		this.zIndex = 0;
+		long uKey = Packing.packLongBigEndian(key, 0);
+		long lKey = Packing.packLongBigEndian(key, 8);
+		
+		// Generate the subkeys
+		generateSubkeys(uKey, lKey);
 	}
 	
 	/**
@@ -91,31 +81,37 @@ public class IDEA implements BlockCipher {
 	private short nextSubkey()
 	{
 		if(this.zIndex >= this.z.length)
-			GenerateNextSubkeys();
+			return -1; // Bad!
 		
 		return this.z[this.zIndex++];
 	}
 	
 	/**
-	 * Populates the subkeys array with the next 8
-	 * subkeys derived from the key by shifting the
-	 * key to the left by 25
+	 * Populates the subkey array z with all 52 necessary
+	 * subkeys + 4 unused ones
+	 * @param uKey - upper 64 bits of the secret key
+	 * @param lKey - lower 64 bits of the secret key
 	 */
-	private void GenerateNextSubkeys()
+	private void generateSubkeys(long uKey, long lKey)
 	{
-		this.zIndex = 0; // reset
-		
-		// Perform the cyclic 25-bit shift
-		long uShiftedBits = (this.uKey & 0xFFFFFF10) >>> 39;
-		long lShiftedBits = (this.lKey & 0xFFFFFF10) >>> 39;
-		this.uKey = this.uKey << 25;
-		this.lKey = this.lKey << 25;
-		this.uKey = this.uKey | lShiftedBits;
-		this.lKey = this.lKey | uShiftedBits;
-		
-		// Extract the subkeys
-		Packing.unpackLongBigEndian(this.lKey, this.z, 4);
-		Packing.unpackLongBigEndian(this.uKey, this.z, 0);
+		// Generate keys 7 times which yields 52 keys
+		int i = 0;
+		do
+		{
+			// Extract the subkeys
+			Packing.unpackLongBigEndian(uKey, this.z, 8*i);
+			Packing.unpackLongBigEndian(lKey, this.z, 8*i + 4);
+			
+			// Perform the cyclic 25-bit shift
+			long uShiftedBits = (uKey & 0xFFFFFF10) >>> 39;
+			long lShiftedBits = (lKey & 0xFFFFFF10) >>> 39;
+			uKey = uKey << 25;
+			lKey = lKey << 25;
+			uKey = uKey | lShiftedBits;
+			lKey = lKey | uShiftedBits;
+			
+			i++;
+		} while(i < 7);
 	}
 	
 
