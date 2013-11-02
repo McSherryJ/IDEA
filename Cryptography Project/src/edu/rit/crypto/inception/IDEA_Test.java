@@ -30,8 +30,13 @@ public class IDEA_Test
 		String hexCiphertext = Hex.toString(p);
 		String hexAns = "43DA094FC6379D16";
 		
+		cipher.decrypt(p);
+		String hexCalcPlaintext = Hex.toString(p);
+		
 		System.out.println("Ciphertext: " + hexCiphertext);
-		System.out.println("Did the first test pass? " + hexAns.equalsIgnoreCase(hexCiphertext) + "\n");
+		System.out.println("Decrypted Plaintext: " + hexCalcPlaintext);
+		System.out.println("Did the first test pass? " + hexAns.equalsIgnoreCase(hexCiphertext) 
+							+ " and " + hexPlaintext.equalsIgnoreCase(hexCalcPlaintext) + "\n");
 		
 		// Second test vector
 		cipher = new IDEA();
@@ -40,7 +45,9 @@ public class IDEA_Test
 		k = new byte[cipher.keySize()];
 		Packing.unpackShortBigEndian(new short[]{1, 2, 3, 4, 5, 6, 7, 8}, 0, k, 0, 8);
 		
-		System.out.println("Plaintext: " + Hex.toString(p));
+		String hexPlaintext2 = Hex.toString(p);
+		
+		System.out.println("Plaintext: " + hexPlaintext2);
 		System.out.println("Key: " + Hex.toString(k));
 		
 		cipher.setKey(k);
@@ -48,8 +55,17 @@ public class IDEA_Test
 		
 		byte[] c = new byte[cipher.blockSize()];
 		Packing.unpackShortBigEndian(new short[]{4603, -4821, 408, 28133}, 0, c, 0, 4);
-		System.out.println("Ciphertext: " + Hex.toString(c));
-		System.out.println("Did the second test pass? " + Hex.toString(c).equalsIgnoreCase(Hex.toString(p)));
+		
+		String hexCiphertext2 = Hex.toString(p);
+		
+		cipher.decrypt(p);
+		
+		String hexCalcPlaintext2 = Hex.toString(p);
+		
+		System.out.println("Ciphertext: " + hexCiphertext2);
+		System.out.println("Decrypted Plaintext: " + hexCalcPlaintext2);
+		System.out.println("Did the second test pass? " + Hex.toString(c).equalsIgnoreCase(hexCiphertext2) 
+							+ " and " + hexPlaintext2.equalsIgnoreCase(hexCalcPlaintext2));
 		
 	}
 

@@ -12,10 +12,10 @@ import edu.rit.util.Packing;
 public class IDEA implements BlockCipher {
 
 	/**
-	 * Precomputed maximum value for a 16-bit number; also known
-	 * as 2^16 = 65,536
+	 * One more than the maximum value for a 16-bit number; also known
+	 * as 2^16 = 65,536 = 0x10000
 	 */
-	private static final int SIXTEEN_BIT_MAX = (int)Math.pow(2, 16);
+	private static final int TWO_TO_THE_16 = (int)Math.pow(2, 16);
 	
 	/**
 	 * An array of the generated 16-bit/2-byte (short) ENCRYPTION subkeys
@@ -38,6 +38,11 @@ public class IDEA implements BlockCipher {
 	private int yIndex;
 	
 	/**
+	 * whether we are encrypting (true) or decrypting (false)
+	 */
+	private boolean encrypting;
+	
+	/**
 	 * Initializes a new IDEA object
 	 */
 	public IDEA()
@@ -46,6 +51,7 @@ public class IDEA implements BlockCipher {
 		this.y = new short[56];
 		this.zIndex = 0;
 		this.yIndex = 0;
+		encrypting = true;
 	}
 	
 	/**
@@ -93,10 +99,20 @@ public class IDEA implements BlockCipher {
 	 */
 	private short nextSubkey()
 	{
-		if(this.zIndex >= this.z.length)
-			return -1; // Bad!
-		
-		return this.z[this.zIndex++];
+		if (encrypting)
+		{
+			if(this.zIndex >= this.z.length)
+				return -1; // Bad!
+			
+			return this.z[this.zIndex++];
+		}
+		else
+		{
+			if(this.yIndex >= this.y.length)
+				return -1; // Bad!
+			
+			return this.y[this.yIndex++];	
+		}
 	}
 	
 	/**
@@ -116,30 +132,6 @@ public class IDEA implements BlockCipher {
 			Packing.unpackLongBigEndian(uKey, this.z, 8*i);
 			Packing.unpackLongBigEndian(lKey, this.z, 8*i + 4);
 			
-			// Calculate the DECRYPTION subkeys
-			for (int j = 8*i; j < j + 8; j++)
-			{
-				int oppositePosition = (9 - (j / 6)) * 6 + (j % 6);
-				if (j % 6 == 1 || j % 6 == 4)
-				{
-					int mulInverse = this.z[oppositePosition];
-					if (mulInverse == 0) mulInverse = SIXTEEN_BIT_MAX + 1; 
-					int result = euclideanAlg(1, 0, SIXTEEN_BIT_MAX + 2, 0, 1, mulInverse)[1];
-					if (result == SIXTEEN_BIT_MAX + 1) result = 0;
-					this.y[j] = (short)result;
-				}
-				else if (j % 6 == 2 || j % 6 == 3)
-				{
-					int result = SIXTEEN_BIT_MAX + 1 - this.z[oppositePosition];
-					if (result == SIXTEEN_BIT_MAX + 1) result = 0;
-					this.y[j] = (short)result;
-				}
-				else 
-				{
-					this.y[j] = this.z[j];
-				}
-			}
-			
 			// Perform the cyclic 25-bit shift
 			long uShiftedBits = (uKey & 0xFFFFFF10) >>> 39;
 			long lShiftedBits = (lKey & 0xFFFFFF10) >>> 39;
@@ -150,10 +142,38 @@ public class IDEA implements BlockCipher {
 			
 			i++;
 		} while(i < 7);
+		
+		// Calculate the DECRYPTION subkeys
+		for (int j = 0; j < 52; j++)
+		{
+			int oppositePosition = (8 - (j / 6)) * 6 + (j % 6);
+			if (j % 6 == 0 || j % 6 == 3)
+			{
+				int mulInverse = this.z[oppositePosition] & 0x0000ffff;
+				if (mulInverse == 0) mulInverse = TWO_TO_THE_16; 
+				int result = euclideanAlg(1, 0, TWO_TO_THE_16 + 1, 0, 1, mulInverse)[1];
+				if (result == TWO_TO_THE_16) result = 0;
+				this.y[j] = (short)result;
+			}
+			else if (j % 6 == 1 || j % 6 == 2)
+			{
+				int result = TWO_TO_THE_16 - this.z[oppositePosition];
+				if (result == TWO_TO_THE_16) result = 0;
+				this.y[j] = (short)result;
+			}
+			else 
+			{
+				this.y[j] = this.z[j];
+			}
+		}
 	}
 	
 	/**
-	 * Calculate the coefficients for the Diophantine equations used in the Euclidean Algorithm 
+	 * Calculate the coefficients for the Diophantine equations used in the Euclidean Algorithm. 
+	 * The equations are as follows:
+	 * first1 * x + second1 * y = result1
+	 * first2 * x + second2 * y = result2
+	 * Any 2 different equations can be used, but typically one would do the following:
 	 * 
 	 * @param first1 is the coefficient of the first number in the first gcd calculation 
 	 * @param second1 is the coefficient of the second number in the first gcd calculation
@@ -198,7 +218,7 @@ public class IDEA implements BlockCipher {
 	 * Encrypts a 64-bit/8-byte value
 	 */
 	@Override
-	public void encrypt(byte[] text) {
+	public void encrypt(byte[] text) {		
 		// Pack the bytes into shorts for processing
 		short[] x = new short[5]; // 5 to keep subscript = index
 		x[1] = Packing.packShortBigEndian(text, 0);
@@ -218,6 +238,19 @@ public class IDEA implements BlockCipher {
 		Packing.unpackShortBigEndian(x[2], text, 2);
 		Packing.unpackShortBigEndian(x[3], text, 4);
 		Packing.unpackShortBigEndian(x[4], text, 6);
+		
+		// Reset subkey counters
+		zIndex = 0;
+		yIndex = 0;
+	}
+	
+	/**
+	 * Decrypts a 64-bit/8-byte value
+	 */
+	public void decrypt(byte[] text) {
+		encrypting = false;
+		encrypt(text);
+		encrypting = true;
 	}
 	
 	/**
@@ -262,9 +295,9 @@ public class IDEA implements BlockCipher {
 	 */
 	private short add(short a, short b)
 	{
-		int x = a < 0 ? SIXTEEN_BIT_MAX + a : a; // 2's complement
-		int y = b < 0 ? SIXTEEN_BIT_MAX + b : b;
-		return (short)((x + y) % SIXTEEN_BIT_MAX);
+		int x = a < 0 ? TWO_TO_THE_16 + a : a; // 2's complement
+		int y = b < 0 ? TWO_TO_THE_16 + b : b;
+		return (short)((x + y) % TWO_TO_THE_16);
 	}
 	
 	/**
@@ -277,16 +310,16 @@ public class IDEA implements BlockCipher {
 	 */
 	private short multiply(short a, short b)
 	{
-		long x = a < 0 ? SIXTEEN_BIT_MAX + a : a; // 2's complement
-	    long y = b < 0 ? SIXTEEN_BIT_MAX + b : b;
+		long x = a < 0 ? TWO_TO_THE_16 + a : a; // 2's complement
+	    long y = b < 0 ? TWO_TO_THE_16 + b : b;
 		
 		// Have to treat 0 as 2^16
-		if (x == 0) x = SIXTEEN_BIT_MAX;
-		if (y == 0) y = SIXTEEN_BIT_MAX;
+		if (x == 0) x = TWO_TO_THE_16;
+		if (y == 0) y = TWO_TO_THE_16;
 		
-		long result = (x * y) % (SIXTEEN_BIT_MAX + 1);
+		long result = (x * y) % (TWO_TO_THE_16 + 1);
 		
-		return result == SIXTEEN_BIT_MAX ? 0 : (short)result; 
+		return result == TWO_TO_THE_16 ? 0 : (short)result; 
 	}
 	
 	/**
