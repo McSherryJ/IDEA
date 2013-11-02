@@ -157,15 +157,40 @@ public class IDEA implements BlockCipher {
 			}
 			else if (j % 6 == 1 || j % 6 == 2)
 			{
-				int result = TWO_TO_THE_16 - this.z[oppositePosition];
-				if (result == TWO_TO_THE_16) result = 0;
-				this.y[j] = (short)result;
+				if (j < 6 && 47 < j)
+				{
+					int result = TWO_TO_THE_16 - (((int)this.z[oppositePosition]) & 0xffff);
+					if (result == TWO_TO_THE_16) result = 0;
+					this.y[j] = (short)result;
+				}
+				else
+				{
+					int result;
+					if (j % 6 == 1) result = TWO_TO_THE_16 - (((int)this.z[oppositePosition + 1]) & 0xffff);
+					else result = TWO_TO_THE_16 - (((int)this.z[oppositePosition - 1]) & 0xffff);
+					if (result == TWO_TO_THE_16) result = 0;
+					this.y[j] = (short)result;
+				}
 			}
 			else 
 			{
-				this.y[j] = this.z[j];
+				//spec has some disagreement on this point.  it's either z[oppositePosition], 
+				// or z[oppositePosition - 6], or z[j]
+				this.y[j] = this.z[oppositePosition - 6];
 			}
 		}
+		
+		System.out.println("PRINTING ENCRYPTION SUBKEYS:");
+		for (int j = 0; j < 52; j++)
+		{
+			System.out.print((((int)this.z[j])&0x0000ffff)+" ");
+		}
+		System.out.println("\n\nPRINTING DECRYPTION SUBKEYS:");
+		for (int j = 0; j < 52; j++)
+		{
+			System.out.print((((int)this.y[j])&0x0000ffff)+" ");
+		}
+		System.out.println("\n");
 	}
 	
 	/**
@@ -173,7 +198,10 @@ public class IDEA implements BlockCipher {
 	 * The equations are as follows:
 	 * first1 * x + second1 * y = result1
 	 * first2 * x + second2 * y = result2
-	 * Any 2 different equations can be used, but typically one would do the following:
+	 * where x and y are the numbers that we are finding the gcd of.  Any 2 different equations 
+	 * can be used, but typically one would do the following:
+	 * 1 * x + 0 * y = xValue
+	 * 0 * x + 1 * y = yValue
 	 * 
 	 * @param first1 is the coefficient of the first number in the first gcd calculation 
 	 * @param second1 is the coefficient of the second number in the first gcd calculation
