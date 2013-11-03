@@ -151,13 +151,13 @@ public class IDEA implements BlockCipher {
 			{
 				int mulInverse = this.z[oppositePosition] & 0x0000ffff;
 				if (mulInverse == 0) mulInverse = TWO_TO_THE_16; 
-				int result = euclideanAlg(1, 0, TWO_TO_THE_16 + 1, 0, 1, mulInverse)[1];
+				int result = (euclideanAlg(1, 0, TWO_TO_THE_16 + 1, 0, 1, mulInverse)[1] + 5 * (TWO_TO_THE_16 + 1)) % (TWO_TO_THE_16 + 1);
 				if (result == TWO_TO_THE_16) result = 0;
 				this.y[j] = (short)result;
 			}
 			else if (j % 6 == 1 || j % 6 == 2)
 			{
-				if (j < 6 && 47 < j)
+				if (j < 6 || 47 < j)
 				{
 					int result = TWO_TO_THE_16 - (((int)this.z[oppositePosition]) & 0xffff);
 					if (result == TWO_TO_THE_16) result = 0;
@@ -179,18 +179,6 @@ public class IDEA implements BlockCipher {
 				this.y[j] = this.z[oppositePosition - 6];
 			}
 		}
-		
-		System.out.println("PRINTING ENCRYPTION SUBKEYS:");
-		for (int j = 0; j < 52; j++)
-		{
-			System.out.print((((int)this.z[j])&0x0000ffff)+" ");
-		}
-		System.out.println("\n\nPRINTING DECRYPTION SUBKEYS:");
-		for (int j = 0; j < 52; j++)
-		{
-			System.out.print((((int)this.y[j])&0x0000ffff)+" ");
-		}
-		System.out.println("\n");
 	}
 	
 	/**
