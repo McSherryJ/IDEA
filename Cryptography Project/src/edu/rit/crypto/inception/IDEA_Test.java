@@ -2,6 +2,7 @@ package edu.rit.crypto.inception;
 
 import edu.rit.util.Hex;
 import edu.rit.util.Packing;
+import java.util.Random;
 
 /**
  * Tests IDEA
@@ -39,7 +40,6 @@ public class IDEA_Test
 							+ " and " + hexPlaintext.equalsIgnoreCase(hexCalcPlaintext) + "\n");
 		
 		// Second test vector
-		cipher = new IDEA();
 		p = new byte[cipher.blockSize()];
 		Packing.unpackShortBigEndian(new short[]{0, 1, 2, 3}, 0, p, 0, 4);
 		k = new byte[cipher.keySize()];
@@ -67,6 +67,35 @@ public class IDEA_Test
 		System.out.println("Did the second test pass? " + Hex.toString(c).equalsIgnoreCase(hexCiphertext2) 
 							+ " and " + hexPlaintext2.equalsIgnoreCase(hexCalcPlaintext2));
 		
+		
+		//random tests
+		int numTests = 500;
+		System.out.println("\nBeginning "+numTests+" randomized tests:");
+		
+		Random randGen = new Random(567);//seed the generator so we can recreate any issues encountered
+		boolean mistakeMade = false;
+		for (int i = 0; i < numTests; i++)
+		{
+			System.out.print(".");
+			if (i%100 == 99) System.out.println();
+			byte[] plainText3 = new byte[cipher.blockSize()];
+			randGen.nextBytes(plainText3);
+			String plainTextString3 = Hex.toString(plainText3);
+			byte[] key3 = new byte[cipher.keySize()];
+			randGen.nextBytes(key3);
+			
+			cipher.setKey(key3);
+			cipher.encrypt(plainText3);
+			cipher.decrypt(plainText3);
+			
+			String decryptedString3 = Hex.toString(plainText3);
+			if (!plainTextString3.equalsIgnoreCase(decryptedString3))
+			{
+				mistakeMade = true;
+				System.out.print("\nIncorrect decryption: decrypted "+plainTextString3+" as "+decryptedString3);
+			}
+		}
+		System.out.println("\nRandom decryption finished "+(mistakeMade ? "un" : "")+"successfully");
 	}
 
 }
