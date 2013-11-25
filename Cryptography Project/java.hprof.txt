@@ -1,0 +1,1537 @@
+JAVA PROFILE 1.0.1, created Mon Nov 25 13:40:59 2013
+
+Copyright (c) 2003, 2005, Oracle and/or its affiliates. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+  - Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+  - Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+
+  - Neither the name of Oracle nor the names of its
+    contributors may be used to endorse or promote products derived
+    from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+Header for -agentlib:hprof (or -Xrunhprof) ASCII Output (JDK 5.0 JVMTI based)
+
+WARNING!  This file format is under development, and is subject to
+change without notice.
+
+This file contains the following types of records:
+
+THREAD START
+THREAD END      mark the lifetime of Java threads
+
+TRACE           represents a Java stack trace.  Each trace consists
+                of a series of stack frames.  Other records refer to
+                TRACEs to identify (1) where object allocations have
+                taken place, (2) the frames in which GC roots were
+                found, and (3) frequently executed methods.
+
+HEAP DUMP       is a complete snapshot of all live objects in the Java
+                heap.  Following distinctions are made:
+
+                ROOT    root set as determined by GC
+                CLS     classes 
+                OBJ     instances
+                ARR     arrays
+
+SITES           is a sorted list of allocation sites.  This identifies
+                the most heavily allocated object types, and the TRACE
+                at which those allocations occurred.
+
+CPU SAMPLES     is a statistical profile of program execution.  The VM
+                periodically samples all running threads, and assigns
+                a quantum to active TRACEs in those threads.  Entries
+                in this record are TRACEs ranked by the percentage of
+                total quanta they consumed; top-ranked TRACEs are
+                typically hot spots in the program.
+
+CPU TIME        is a profile of program execution obtained by measuring
+                the time spent in individual methods (excluding the time
+                spent in callees), as well as by counting the number of
+                times each method is called. Entries in this record are
+                TRACEs ranked by the percentage of total CPU time. The
+                "count" field indicates the number of times each TRACE 
+                is invoked.
+
+MONITOR TIME    is a profile of monitor contention obtained by measuring
+                the time spent by a thread waiting to enter a monitor.
+                Entries in this record are TRACEs ranked by the percentage
+                of total monitor contention time and a brief description
+                of the monitor.  The "count" field indicates the number of 
+                times the monitor was contended at that TRACE.
+
+MONITOR DUMP    is a complete snapshot of all the monitors and threads in 
+                the System.
+
+HEAP DUMP, SITES, CPU SAMPLES|TIME and MONITOR DUMP|TIME records are generated 
+at program exit.  They can also be obtained during program execution by typing 
+Ctrl-\ (on Solaris) or by typing Ctrl-Break (on Win32).
+
+--------
+
+THREAD START (obj=5000016f, id = 200001, name="main", group="main")
+THREAD END (id = 200001)
+THREAD START (obj=5000016f, id = 200005, name="DestroyJavaVM", group="main")
+THREAD END (id = 200005)
+THREAD END (id = 200002)
+TRACE 300074:
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:239)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300088:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:282)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300122:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:283)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300084:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:278)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300152:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:281)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300107:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:336)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:281)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300079:
+	edu.rit.crypto.inception.IDEA.xor(IDEA.java:349)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:286)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300093:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:336)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:278)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300086:
+	edu.rit.crypto.inception.IDEA.xor(IDEA.java:349)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:287)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300085:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:336)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:283)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300081:
+	edu.rit.crypto.inception.IDEA.xor(IDEA.java:349)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:283)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300089:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:336)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:282)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300133:
+	edu.rit.crypto.inception.IDEA.xor(IDEA.java:349)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:282)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300087:
+	edu.rit.crypto.inception.IDEA.xor(IDEA.java:349)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:288)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300126:
+	edu.rit.crypto.inception.IDEA.xor(IDEA.java:349)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:289)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300138:
+	edu.rit.crypto.inception.IDEA.add(IDEA.java:314)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:280)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300078:
+	edu.rit.crypto.inception.IDEA.add(IDEA.java:314)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:279)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300129:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:107)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:283)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300111:
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:246)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300091:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:280)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300103:
+	edu.rit.util.Packing.unpackShortBigEndian(Packing.java:818)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:253)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300170:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:280)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300110:
+	edu.rit.crypto.inception.IDEA.add(IDEA.java:314)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:284)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300102:
+	edu.rit.util.Packing.unpackShortBigEndian(Packing.java:817)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:253)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300077:
+	java.util.Arrays.fill(<Unknown Source>:Unknown line)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:36)
+TRACE 300104:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:279)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300156:
+	edu.rit.crypto.inception.IDEA.add(IDEA.java:315)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:279)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300083:
+	edu.rit.crypto.inception.IDEA.add(IDEA.java:314)
+	edu.rit.crypto.inception.IDEA.outputTransformation(IDEA.java:301)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:250)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300120:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:336)
+	edu.rit.crypto.inception.IDEA.outputTransformation(IDEA.java:303)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:250)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300097:
+	java.util.Arrays.fill(<Unknown Source>:Unknown line)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:36)
+TRACE 300098:
+	edu.rit.crypto.inception.IDEA.outputTransformation(IDEA.java:301)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:250)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300090:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:284)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300141:
+	edu.rit.crypto.inception.IDEA.add(IDEA.java:315)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:284)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300094:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:107)
+	edu.rit.crypto.inception.IDEA.outputTransformation(IDEA.java:302)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:250)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300184:
+	edu.rit.util.Packing.unpackShortBigEndian(Packing.java:818)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:254)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300096:
+	java.util.Arrays.fill(<Unknown Source>:Unknown line)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:36)
+TRACE 300213:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:330)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:278)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300082:
+	edu.rit.crypto.inception.IDEA.add(IDEA.java:315)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:283)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300130:
+	edu.rit.util.Packing.unpackShortBigEndian(Packing.java:819)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:253)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300183:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:281)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300169:
+	edu.rit.crypto.inception.IDEA.add(IDEA.java:315)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:280)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300143:
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:253)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300134:
+	edu.rit.util.Packing.unpackShortBigEndian(Packing.java:818)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:255)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300176:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:336)
+	edu.rit.crypto.inception.IDEA.outputTransformation(IDEA.java:300)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:250)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300100:
+	edu.rit.crypto.inception.IDEA.outputTransformation(IDEA.java:303)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:250)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300080:
+	edu.rit.crypto.inception.IDEA.outputTransformation(IDEA.java:300)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:250)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300108:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:278)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300182:
+	edu.rit.util.Packing.unpackShortBigEndian(Packing.java:817)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:255)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300179:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:330)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:281)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300177:
+	edu.rit.crypto.inception.IDEA.add(IDEA.java:314)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:283)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300171:
+	edu.rit.util.Packing.unpackShortBigEndian(Packing.java:817)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:256)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300186:
+	edu.rit.util.Packing.unpackShortBigEndian(Packing.java:817)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:254)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300137:
+	edu.rit.crypto.inception.IDEA.outputTransformation(IDEA.java:299)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:250)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300205:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:330)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:283)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300118:
+	edu.rit.crypto.inception.IDEA.add(IDEA.java:314)
+	edu.rit.crypto.inception.IDEA.outputTransformation(IDEA.java:302)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:250)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300232:
+	edu.rit.util.Packing.unpackShortBigEndian(Packing.java:818)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:256)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300166:
+	edu.rit.crypto.inception.IDEA.add(IDEA.java:315)
+	edu.rit.crypto.inception.IDEA.outputTransformation(IDEA.java:301)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:250)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300192:
+	edu.rit.crypto.inception.IDEA.outputTransformation(IDEA.java:300)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:250)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300181:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:330)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:282)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300121:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:329)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:281)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300139:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:107)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:279)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300189:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:329)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:278)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300132:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:279)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300208:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:107)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:283)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300197:
+	edu.rit.crypto.inception.IDEA.outputTransformation(IDEA.java:303)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:250)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300225:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:334)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:278)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300204:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:329)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:281)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300237:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:329)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:282)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300295:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:329)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:283)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300101:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:278)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300229:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:334)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:281)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300201:
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:253)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300155:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:107)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:281)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300242:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:107)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:278)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300212:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:283)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300158:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:329)
+	edu.rit.crypto.inception.IDEA.outputTransformation(IDEA.java:300)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:250)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300151:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:334)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:283)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300162:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:107)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:281)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300164:
+	edu.rit.crypto.inception.IDEA.add(IDEA.java:315)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:283)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300168:
+	edu.rit.util.Packing.unpackShortBigEndian(Packing.java:819)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:256)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300173:
+	edu.rit.crypto.inception.IDEA.add(IDEA.java:314)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:280)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300214:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:334)
+	edu.rit.crypto.inception.IDEA.outputTransformation(IDEA.java:300)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:250)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300146:
+	edu.rit.crypto.inception.IDEA.xor(IDEA.java:349)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:282)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300188:
+	edu.rit.util.Packing.unpackShortBigEndian(Packing.java:819)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:253)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300200:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:330)
+	edu.rit.crypto.inception.IDEA.outputTransformation(IDEA.java:300)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:250)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300136:
+	edu.rit.crypto.inception.IDEA.add(IDEA.java:314)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:283)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300119:
+	edu.rit.crypto.inception.IDEA.add(IDEA.java:316)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:279)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300234:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:107)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:282)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300124:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:329)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:283)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300157:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:107)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:282)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300273:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:334)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:282)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300254:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:107)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:280)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300193:
+	edu.rit.crypto.inception.IDEA.xor(IDEA.java:349)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:282)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300247:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:338)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:282)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300244:
+	edu.rit.crypto.inception.IDEA.add(IDEA.java:314)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:284)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300095:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:104)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:279)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300236:
+	edu.rit.crypto.inception.IDEA.add(IDEA.java:315)
+	edu.rit.crypto.inception.IDEA.outputTransformation(IDEA.java:302)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:250)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300073:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:289)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300230:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:102)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:280)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300224:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:107)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:278)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300259:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:336)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:282)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300218:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:288)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300211:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:336)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:278)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300209:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:107)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:281)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300196:
+	edu.rit.util.Packing.unpackShortBigEndian(Packing.java:819)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:254)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300195:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:107)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:282)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300190:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:102)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:283)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300185:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:329)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:282)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300178:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:107)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:278)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300109:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:107)
+	edu.rit.crypto.inception.IDEA.outputTransformation(IDEA.java:300)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:250)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300175:
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:246)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300246:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:333)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:281)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300112:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:336)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:278)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300257:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:336)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:281)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300149:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:330)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:282)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300145:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:329)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:278)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300142:
+	edu.rit.crypto.inception.IDEA.add(IDEA.java:314)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:279)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300117:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:278)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300275:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:104)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:283)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300125:
+	edu.rit.crypto.inception.IDEA.xor(IDEA.java:349)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:287)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300272:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:104)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:280)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300271:
+	edu.rit.crypto.inception.IDEA.add(IDEA.java:316)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:283)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300270:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:102)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:280)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300123:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:102)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:283)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300274:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:329)
+	edu.rit.crypto.inception.IDEA.outputTransformation(IDEA.java:303)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:250)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300269:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:102)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:279)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300268:
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300276:
+	edu.rit.util.Packing.unpackShortBigEndian(Packing.java:818)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:253)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300128:
+	edu.rit.crypto.inception.IDEA.xor(IDEA.java:349)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:283)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300277:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:107)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:279)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300278:
+	edu.rit.util.Packing.packShortBigEndian(Packing.java:99)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:240)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300131:
+	edu.rit.util.Packing.packShortBigEndian(Packing.java:98)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:243)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300279:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:336)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:281)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300280:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:282)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300281:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:107)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:278)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300135:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:336)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:281)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300282:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:104)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:282)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300283:
+	edu.rit.util.Packing.packShortBigEndian(Packing.java:99)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:243)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300284:
+	edu.rit.crypto.inception.IDEA.add(IDEA.java:316)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:279)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300285:
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:253)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300140:
+	edu.rit.crypto.inception.IDEA.outputTransformation(IDEA.java:301)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:250)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300286:
+	edu.rit.util.Packing.unpackShortBigEndian(Packing.java:819)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:256)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300116:
+	edu.rit.util.Packing.packShortBigEndian(Packing.java:99)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:240)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300287:
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:246)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300144:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:284)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300115:
+	edu.rit.crypto.inception.IDEA.add(IDEA.java:315)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:280)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300288:
+	edu.rit.crypto.inception.IDEA.outputTransformation(IDEA.java:299)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:250)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300147:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:287)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300148:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:279)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300114:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:333)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:278)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300150:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:104)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:279)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300289:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:104)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:280)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300290:
+	edu.rit.crypto.inception.IDEA.add(IDEA.java:315)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:279)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300153:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:102)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:278)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300154:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:102)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:280)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300291:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:338)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:282)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300292:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:102)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:282)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300293:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:338)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:283)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300294:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:107)
+	edu.rit.crypto.inception.IDEA.outputTransformation(IDEA.java:301)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:250)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300159:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:336)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:283)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300160:
+	edu.rit.util.Packing.packShortBigEndian(Packing.java:99)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:241)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300161:
+	edu.rit.crypto.inception.IDEA.xor(IDEA.java:349)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:286)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300296:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:107)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:283)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300163:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:334)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:282)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300297:
+	edu.rit.crypto.inception.IDEA.add(IDEA.java:316)
+	edu.rit.crypto.inception.IDEA.outputTransformation(IDEA.java:301)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:250)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300165:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:334)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:282)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300113:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:280)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300167:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:281)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300298:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:286)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300299:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:104)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:278)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300267:
+	edu.rit.crypto.inception.IDEA.add(IDEA.java:314)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:283)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300301:
+	edu.rit.crypto.inception.IDEA.outputTransformation(IDEA.java:300)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:250)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300172:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:330)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:278)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300302:
+	edu.rit.util.Packing.packShortBigEndian(Packing.java:98)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:242)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300174:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:102)
+	edu.rit.crypto.inception.IDEA.outputTransformation(IDEA.java:300)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:250)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300265:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:330)
+	edu.rit.crypto.inception.IDEA.outputTransformation(IDEA.java:303)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:250)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300303:
+	edu.rit.util.Packing.unpackShortBigEndian(Packing.java:819)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:253)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300304:
+	edu.rit.util.Packing.packShortBigEndian(Packing.java:96)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:240)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300264:
+	edu.rit.crypto.inception.IDEA.xor(IDEA.java:349)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:289)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300305:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:329)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:282)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300180:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:289)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300306:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:102)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:278)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300307:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:333)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:282)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300308:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:338)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:278)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300309:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:102)
+	edu.rit.crypto.inception.IDEA.outputTransformation(IDEA.java:303)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:250)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300263:
+	edu.rit.util.Packing.packShortBigEndian(Packing.java:99)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:241)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300310:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:330)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:283)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300187:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:107)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:280)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300311:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:333)
+	edu.rit.crypto.inception.IDEA.outputTransformation(IDEA.java:300)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:250)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300312:
+	edu.rit.crypto.inception.IDEA.add(IDEA.java:316)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:279)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300106:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:288)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300191:
+	edu.rit.util.Packing.unpackShortBigEndian(Packing.java:817)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:255)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300313:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:280)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300314:
+	edu.rit.crypto.inception.IDEA.add(IDEA.java:316)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:280)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300194:
+	edu.rit.crypto.inception.IDEA.add(IDEA.java:315)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:280)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300105:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:279)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300262:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:102)
+	edu.rit.crypto.inception.IDEA.outputTransformation(IDEA.java:303)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:250)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300315:
+	edu.rit.crypto.inception.IDEA.add(IDEA.java:316)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:284)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300198:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:338)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:281)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300199:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:329)
+	edu.rit.crypto.inception.IDEA.outputTransformation(IDEA.java:303)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:250)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300316:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:338)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:278)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300317:
+	edu.rit.util.Packing.packShortBigEndian(Packing.java:99)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:241)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300202:
+	edu.rit.util.Packing.packShortBigEndian(Packing.java:99)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:240)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300203:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:281)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300318:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:338)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:281)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300319:
+	edu.rit.util.Packing.packShortBigEndian(Packing.java:99)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:240)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300206:
+	edu.rit.crypto.inception.IDEA.xor(IDEA.java:349)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:283)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300207:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:107)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:282)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300320:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:280)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300261:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:289)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300210:
+	edu.rit.util.Packing.unpackShortBigEndian(Packing.java:819)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:255)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300069:
+	java.util.jar.JarFile.initializeVerifier(<Unknown Source>:Unknown line)
+	java.util.jar.JarFile.getInputStream(<Unknown Source>:Unknown line)
+	sun.misc.URLClassPath$JarLoader$2.getInputStream(<Unknown Source>:Unknown line)
+	sun.misc.Resource.cachedInputStream(<Unknown Source>:Unknown line)
+	sun.misc.Resource.getByteBuffer(<Unknown Source>:Unknown line)
+	java.net.URLClassLoader.defineClass(<Unknown Source>:Unknown line)
+	java.net.URLClassLoader.access$100(<Unknown Source>:Unknown line)
+	java.net.URLClassLoader$1.run(<Unknown Source>:Unknown line)
+	java.net.URLClassLoader$1.run(<Unknown Source>:Unknown line)
+	java.security.AccessController.doPrivileged(<Unknown Source>:Unknown line)
+TRACE 300321:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:102)
+	edu.rit.crypto.inception.IDEA.outputTransformation(IDEA.java:301)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:250)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300322:
+	edu.rit.crypto.inception.IDEA.outputTransformation(IDEA.java:300)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:250)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300323:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:333)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:282)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300215:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:334)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:278)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300216:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:287)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300217:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:338)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:282)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300260:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:329)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:278)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300219:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:104)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:279)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300220:
+	java.util.Arrays.fill(<Unknown Source>:Unknown line)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:36)
+TRACE 300221:
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:246)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300222:
+	edu.rit.crypto.inception.IDEA.xor(IDEA.java:349)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:289)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300223:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:286)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300099:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:279)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300324:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:338)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:282)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300226:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:282)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300227:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:287)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300228:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:107)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:280)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300325:
+	edu.rit.crypto.inception.IDEA.add(IDEA.java:316)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:283)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300258:
+	edu.rit.crypto.inception.IDEA.xor(IDEA.java:349)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:288)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300231:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:107)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:283)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300326:
+	java.util.Arrays.fill(<Unknown Source>:Unknown line)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:36)
+TRACE 300233:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:286)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300327:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:338)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:283)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300235:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:280)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300075:
+	edu.rit.util.Packing.packShortBigEndian(Packing.java:98)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:240)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300328:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:338)
+	edu.rit.crypto.inception.IDEA.outputTransformation(IDEA.java:300)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:250)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300238:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:290)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300239:
+	edu.rit.crypto.inception.IDEA.add(IDEA.java:315)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:284)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300240:
+	edu.rit.util.Packing.packShortBigEndian(Packing.java:99)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:240)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300241:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:107)
+	edu.rit.crypto.inception.IDEA.outputTransformation(IDEA.java:303)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:250)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300329:
+	edu.rit.util.Packing.packShortBigEndian(Packing.java:98)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:243)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300243:
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:254)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300076:
+	edu.rit.util.Packing.packShortBigEndian(Packing.java:97)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:243)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300245:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:107)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:280)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300300:
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:259)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300092:
+	edu.rit.util.Packing.packShortBigEndian(Packing.java:99)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:243)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300248:
+	edu.rit.crypto.inception.IDEA.add(IDEA.java:314)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:284)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300249:
+	edu.rit.util.Packing.packShortBigEndian(Packing.java:99)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:241)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300250:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:336)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:282)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300251:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:329)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:283)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300252:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:330)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:281)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300253:
+	edu.rit.crypto.inception.IDEA.nextSubkey(IDEA.java:107)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:279)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300127:
+	edu.rit.crypto.inception.IDEA.multiply(IDEA.java:336)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:282)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300255:
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:287)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300256:
+	edu.rit.crypto.inception.IDEA.add(IDEA.java:316)
+	edu.rit.crypto.inception.IDEA.round(IDEA.java:284)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:247)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+TRACE 300330:
+	edu.rit.util.Packing.unpackShortBigEndian(Packing.java:819)
+	edu.rit.crypto.inception.IDEA.encrypt(IDEA.java:253)
+	edu.rit.crypto.inception.IDEA_Profile.main(IDEA_Profile.java:34)
+CPU SAMPLES BEGIN (total = 3235) Mon Nov 25 13:41:33 2013
+rank   self  accum   count trace method
+   1 42.10% 42.10%    1362 300074 edu.rit.crypto.inception.IDEA.encrypt
+   2  2.69% 44.79%      87 300088 edu.rit.crypto.inception.IDEA.round
+   3  2.60% 47.39%      84 300122 edu.rit.crypto.inception.IDEA.round
+   4  2.57% 49.95%      83 300084 edu.rit.crypto.inception.IDEA.round
+   5  2.10% 52.06%      68 300152 edu.rit.crypto.inception.IDEA.round
+   6  1.98% 54.03%      64 300107 edu.rit.crypto.inception.IDEA.multiply
+   7  1.92% 55.95%      62 300079 edu.rit.crypto.inception.IDEA.xor
+   8  1.85% 57.81%      60 300093 edu.rit.crypto.inception.IDEA.multiply
+   9  1.76% 59.57%      57 300086 edu.rit.crypto.inception.IDEA.xor
+  10  1.70% 61.27%      55 300085 edu.rit.crypto.inception.IDEA.multiply
+  11  1.70% 62.97%      55 300081 edu.rit.crypto.inception.IDEA.xor
+  12  1.64% 64.61%      53 300089 edu.rit.crypto.inception.IDEA.multiply
+  13  1.42% 66.03%      46 300133 edu.rit.crypto.inception.IDEA.xor
+  14  1.39% 67.42%      45 300087 edu.rit.crypto.inception.IDEA.xor
+  15  1.33% 68.75%      43 300126 edu.rit.crypto.inception.IDEA.xor
+  16  1.24% 69.98%      40 300138 edu.rit.crypto.inception.IDEA.add
+  17  1.21% 71.19%      39 300078 edu.rit.crypto.inception.IDEA.add
+  18  1.14% 72.33%      37 300129 edu.rit.crypto.inception.IDEA.nextSubkey
+  19  1.11% 73.45%      36 300111 edu.rit.crypto.inception.IDEA.encrypt
+  20  0.74% 74.19%      24 300091 edu.rit.crypto.inception.IDEA.round
+  21  0.68% 74.87%      22 300103 edu.rit.util.Packing.unpackShortBigEndian
+  22  0.68% 75.55%      22 300170 edu.rit.crypto.inception.IDEA.round
+  23  0.65% 76.20%      21 300110 edu.rit.crypto.inception.IDEA.add
+  24  0.65% 76.85%      21 300102 edu.rit.util.Packing.unpackShortBigEndian
+  25  0.62% 77.47%      20 300077 java.util.Arrays.fill
+  26  0.62% 78.08%      20 300104 edu.rit.crypto.inception.IDEA.round
+  27  0.62% 78.70%      20 300156 edu.rit.crypto.inception.IDEA.add
+  28  0.59% 79.29%      19 300083 edu.rit.crypto.inception.IDEA.add
+  29  0.59% 79.88%      19 300120 edu.rit.crypto.inception.IDEA.multiply
+  30  0.56% 80.43%      18 300097 java.util.Arrays.fill
+  31  0.56% 80.99%      18 300098 edu.rit.crypto.inception.IDEA.outputTransformation
+  32  0.56% 81.55%      18 300090 edu.rit.crypto.inception.IDEA.round
+  33  0.53% 82.07%      17 300141 edu.rit.crypto.inception.IDEA.add
+  34  0.53% 82.60%      17 300094 edu.rit.crypto.inception.IDEA.nextSubkey
+  35  0.49% 83.09%      16 300184 edu.rit.util.Packing.unpackShortBigEndian
+  36  0.43% 83.52%      14 300096 java.util.Arrays.fill
+  37  0.40% 83.93%      13 300213 edu.rit.crypto.inception.IDEA.multiply
+  38  0.40% 84.33%      13 300082 edu.rit.crypto.inception.IDEA.add
+  39  0.40% 84.73%      13 300130 edu.rit.util.Packing.unpackShortBigEndian
+  40  0.37% 85.10%      12 300183 edu.rit.crypto.inception.IDEA.round
+  41  0.37% 85.47%      12 300169 edu.rit.crypto.inception.IDEA.add
+  42  0.37% 85.84%      12 300143 edu.rit.crypto.inception.IDEA.encrypt
+  43  0.34% 86.18%      11 300134 edu.rit.util.Packing.unpackShortBigEndian
+  44  0.34% 86.52%      11 300176 edu.rit.crypto.inception.IDEA.multiply
+  45  0.31% 86.83%      10 300100 edu.rit.crypto.inception.IDEA.outputTransformation
+  46  0.31% 87.14%      10 300080 edu.rit.crypto.inception.IDEA.outputTransformation
+  47  0.31% 87.45%      10 300108 edu.rit.crypto.inception.IDEA.round
+  48  0.28% 87.73%       9 300182 edu.rit.util.Packing.unpackShortBigEndian
+  49  0.28% 88.01%       9 300179 edu.rit.crypto.inception.IDEA.multiply
+  50  0.28% 88.28%       9 300177 edu.rit.crypto.inception.IDEA.add
+  51  0.28% 88.56%       9 300171 edu.rit.util.Packing.unpackShortBigEndian
+  52  0.25% 88.81%       8 300186 edu.rit.util.Packing.unpackShortBigEndian
+  53  0.25% 89.06%       8 300137 edu.rit.crypto.inception.IDEA.outputTransformation
+  54  0.25% 89.30%       8 300205 edu.rit.crypto.inception.IDEA.multiply
+  55  0.22% 89.52%       7 300118 edu.rit.crypto.inception.IDEA.add
+  56  0.19% 89.71%       6 300232 edu.rit.util.Packing.unpackShortBigEndian
+  57  0.19% 89.89%       6 300166 edu.rit.crypto.inception.IDEA.add
+  58  0.15% 90.05%       5 300192 edu.rit.crypto.inception.IDEA.outputTransformation
+  59  0.15% 90.20%       5 300181 edu.rit.crypto.inception.IDEA.multiply
+  60  0.15% 90.36%       5 300121 edu.rit.crypto.inception.IDEA.multiply
+  61  0.15% 90.51%       5 300139 edu.rit.crypto.inception.IDEA.nextSubkey
+  62  0.15% 90.66%       5 300189 edu.rit.crypto.inception.IDEA.multiply
+  63  0.15% 90.82%       5 300132 edu.rit.crypto.inception.IDEA.round
+  64  0.15% 90.97%       5 300208 edu.rit.crypto.inception.IDEA.nextSubkey
+  65  0.15% 91.13%       5 300197 edu.rit.crypto.inception.IDEA.outputTransformation
+  66  0.15% 91.28%       5 300225 edu.rit.crypto.inception.IDEA.multiply
+  67  0.12% 91.41%       4 300204 edu.rit.crypto.inception.IDEA.multiply
+  68  0.12% 91.53%       4 300237 edu.rit.crypto.inception.IDEA.multiply
+  69  0.12% 91.65%       4 300295 edu.rit.crypto.inception.IDEA.multiply
+  70  0.12% 91.78%       4 300101 edu.rit.crypto.inception.IDEA.round
+  71  0.12% 91.90%       4 300229 edu.rit.crypto.inception.IDEA.multiply
+  72  0.12% 92.02%       4 300201 edu.rit.crypto.inception.IDEA.encrypt
+  73  0.12% 92.15%       4 300155 edu.rit.crypto.inception.IDEA.nextSubkey
+  74  0.12% 92.27%       4 300242 edu.rit.crypto.inception.IDEA.nextSubkey
+  75  0.09% 92.36%       3 300212 edu.rit.crypto.inception.IDEA.round
+  76  0.09% 92.46%       3 300158 edu.rit.crypto.inception.IDEA.multiply
+  77  0.09% 92.55%       3 300151 edu.rit.crypto.inception.IDEA.multiply
+  78  0.09% 92.64%       3 300162 edu.rit.crypto.inception.IDEA.nextSubkey
+  79  0.09% 92.74%       3 300164 edu.rit.crypto.inception.IDEA.add
+  80  0.09% 92.83%       3 300168 edu.rit.util.Packing.unpackShortBigEndian
+  81  0.09% 92.92%       3 300173 edu.rit.crypto.inception.IDEA.add
+  82  0.09% 93.01%       3 300214 edu.rit.crypto.inception.IDEA.multiply
+  83  0.09% 93.11%       3 300146 edu.rit.crypto.inception.IDEA.xor
+  84  0.09% 93.20%       3 300188 edu.rit.util.Packing.unpackShortBigEndian
+  85  0.09% 93.29%       3 300200 edu.rit.crypto.inception.IDEA.multiply
+  86  0.09% 93.38%       3 300136 edu.rit.crypto.inception.IDEA.add
+  87  0.09% 93.48%       3 300119 edu.rit.crypto.inception.IDEA.add
+  88  0.09% 93.57%       3 300234 edu.rit.crypto.inception.IDEA.nextSubkey
+  89  0.09% 93.66%       3 300124 edu.rit.crypto.inception.IDEA.multiply
+  90  0.09% 93.76%       3 300157 edu.rit.crypto.inception.IDEA.nextSubkey
+  91  0.09% 93.85%       3 300273 edu.rit.crypto.inception.IDEA.multiply
+  92  0.09% 93.94%       3 300254 edu.rit.crypto.inception.IDEA.nextSubkey
+  93  0.09% 94.03%       3 300193 edu.rit.crypto.inception.IDEA.xor
+  94  0.06% 94.10%       2 300247 edu.rit.crypto.inception.IDEA.multiply
+  95  0.06% 94.16%       2 300244 edu.rit.crypto.inception.IDEA.add
+  96  0.06% 94.22%       2 300095 edu.rit.crypto.inception.IDEA.nextSubkey
+  97  0.06% 94.28%       2 300236 edu.rit.crypto.inception.IDEA.add
+  98  0.06% 94.34%       2 300073 edu.rit.crypto.inception.IDEA.round
+  99  0.06% 94.40%       2 300230 edu.rit.crypto.inception.IDEA.nextSubkey
+ 100  0.06% 94.47%       2 300224 edu.rit.crypto.inception.IDEA.nextSubkey
+ 101  0.06% 94.53%       2 300259 edu.rit.crypto.inception.IDEA.multiply
+ 102  0.06% 94.59%       2 300218 edu.rit.crypto.inception.IDEA.round
+ 103  0.06% 94.65%       2 300211 edu.rit.crypto.inception.IDEA.multiply
+ 104  0.06% 94.71%       2 300209 edu.rit.crypto.inception.IDEA.nextSubkey
+ 105  0.06% 94.78%       2 300196 edu.rit.util.Packing.unpackShortBigEndian
+ 106  0.06% 94.84%       2 300195 edu.rit.crypto.inception.IDEA.nextSubkey
+ 107  0.06% 94.90%       2 300190 edu.rit.crypto.inception.IDEA.nextSubkey
+ 108  0.06% 94.96%       2 300185 edu.rit.crypto.inception.IDEA.multiply
+ 109  0.06% 95.02%       2 300178 edu.rit.crypto.inception.IDEA.nextSubkey
+ 110  0.06% 95.09%       2 300109 edu.rit.crypto.inception.IDEA.nextSubkey
+ 111  0.06% 95.15%       2 300175 edu.rit.crypto.inception.IDEA.encrypt
+ 112  0.06% 95.21%       2 300246 edu.rit.crypto.inception.IDEA.multiply
+ 113  0.06% 95.27%       2 300112 edu.rit.crypto.inception.IDEA.multiply
+ 114  0.06% 95.33%       2 300257 edu.rit.crypto.inception.IDEA.multiply
+ 115  0.06% 95.39%       2 300149 edu.rit.crypto.inception.IDEA.multiply
+ 116  0.06% 95.46%       2 300145 edu.rit.crypto.inception.IDEA.multiply
+ 117  0.06% 95.52%       2 300142 edu.rit.crypto.inception.IDEA.add
+ 118  0.06% 95.58%       2 300117 edu.rit.crypto.inception.IDEA.round
+ 119  0.06% 95.64%       2 300275 edu.rit.crypto.inception.IDEA.nextSubkey
+ 120  0.06% 95.70%       2 300125 edu.rit.crypto.inception.IDEA.xor
+ 121  0.06% 95.77%       2 300272 edu.rit.crypto.inception.IDEA.nextSubkey
+ 122  0.03% 95.80%       1 300271 edu.rit.crypto.inception.IDEA.add
+ 123  0.03% 95.83%       1 300270 edu.rit.crypto.inception.IDEA.nextSubkey
+ 124  0.03% 95.86%       1 300123 edu.rit.crypto.inception.IDEA.nextSubkey
+ 125  0.03% 95.89%       1 300274 edu.rit.crypto.inception.IDEA.multiply
+ 126  0.03% 95.92%       1 300269 edu.rit.crypto.inception.IDEA.nextSubkey
+ 127  0.03% 95.95%       1 300268 edu.rit.crypto.inception.IDEA.encrypt
+ 128  0.03% 95.98%       1 300276 edu.rit.util.Packing.unpackShortBigEndian
+ 129  0.03% 96.01%       1 300128 edu.rit.crypto.inception.IDEA.xor
+ 130  0.03% 96.04%       1 300277 edu.rit.crypto.inception.IDEA.nextSubkey
+ 131  0.03% 96.07%       1 300278 edu.rit.util.Packing.packShortBigEndian
+ 132  0.03% 96.11%       1 300131 edu.rit.util.Packing.packShortBigEndian
+ 133  0.03% 96.14%       1 300279 edu.rit.crypto.inception.IDEA.multiply
+ 134  0.03% 96.17%       1 300280 edu.rit.crypto.inception.IDEA.round
+ 135  0.03% 96.20%       1 300281 edu.rit.crypto.inception.IDEA.nextSubkey
+ 136  0.03% 96.23%       1 300135 edu.rit.crypto.inception.IDEA.multiply
+ 137  0.03% 96.26%       1 300282 edu.rit.crypto.inception.IDEA.nextSubkey
+ 138  0.03% 96.29%       1 300283 edu.rit.util.Packing.packShortBigEndian
+ 139  0.03% 96.32%       1 300284 edu.rit.crypto.inception.IDEA.add
+ 140  0.03% 96.35%       1 300285 edu.rit.crypto.inception.IDEA.encrypt
+ 141  0.03% 96.38%       1 300140 edu.rit.crypto.inception.IDEA.outputTransformation
+ 142  0.03% 96.41%       1 300286 edu.rit.util.Packing.unpackShortBigEndian
+ 143  0.03% 96.45%       1 300116 edu.rit.util.Packing.packShortBigEndian
+ 144  0.03% 96.48%       1 300287 edu.rit.crypto.inception.IDEA.encrypt
+ 145  0.03% 96.51%       1 300144 edu.rit.crypto.inception.IDEA.round
+ 146  0.03% 96.54%       1 300115 edu.rit.crypto.inception.IDEA.add
+ 147  0.03% 96.57%       1 300288 edu.rit.crypto.inception.IDEA.outputTransformation
+ 148  0.03% 96.60%       1 300147 edu.rit.crypto.inception.IDEA.round
+ 149  0.03% 96.63%       1 300148 edu.rit.crypto.inception.IDEA.round
+ 150  0.03% 96.66%       1 300114 edu.rit.crypto.inception.IDEA.multiply
+ 151  0.03% 96.69%       1 300150 edu.rit.crypto.inception.IDEA.nextSubkey
+ 152  0.03% 96.72%       1 300289 edu.rit.crypto.inception.IDEA.nextSubkey
+ 153  0.03% 96.75%       1 300290 edu.rit.crypto.inception.IDEA.add
+ 154  0.03% 96.79%       1 300153 edu.rit.crypto.inception.IDEA.nextSubkey
+ 155  0.03% 96.82%       1 300154 edu.rit.crypto.inception.IDEA.nextSubkey
+ 156  0.03% 96.85%       1 300291 edu.rit.crypto.inception.IDEA.multiply
+ 157  0.03% 96.88%       1 300292 edu.rit.crypto.inception.IDEA.nextSubkey
+ 158  0.03% 96.91%       1 300293 edu.rit.crypto.inception.IDEA.multiply
+ 159  0.03% 96.94%       1 300294 edu.rit.crypto.inception.IDEA.nextSubkey
+ 160  0.03% 96.97%       1 300159 edu.rit.crypto.inception.IDEA.multiply
+ 161  0.03% 97.00%       1 300160 edu.rit.util.Packing.packShortBigEndian
+ 162  0.03% 97.03%       1 300161 edu.rit.crypto.inception.IDEA.xor
+ 163  0.03% 97.06%       1 300296 edu.rit.crypto.inception.IDEA.nextSubkey
+ 164  0.03% 97.09%       1 300163 edu.rit.crypto.inception.IDEA.multiply
+ 165  0.03% 97.13%       1 300297 edu.rit.crypto.inception.IDEA.add
+ 166  0.03% 97.16%       1 300165 edu.rit.crypto.inception.IDEA.multiply
+ 167  0.03% 97.19%       1 300113 edu.rit.crypto.inception.IDEA.round
+ 168  0.03% 97.22%       1 300167 edu.rit.crypto.inception.IDEA.round
+ 169  0.03% 97.25%       1 300298 edu.rit.crypto.inception.IDEA.round
+ 170  0.03% 97.28%       1 300299 edu.rit.crypto.inception.IDEA.nextSubkey
+ 171  0.03% 97.31%       1 300267 edu.rit.crypto.inception.IDEA.add
+ 172  0.03% 97.34%       1 300301 edu.rit.crypto.inception.IDEA.outputTransformation
+ 173  0.03% 97.37%       1 300172 edu.rit.crypto.inception.IDEA.multiply
+ 174  0.03% 97.40%       1 300302 edu.rit.util.Packing.packShortBigEndian
+ 175  0.03% 97.43%       1 300174 edu.rit.crypto.inception.IDEA.nextSubkey
+ 176  0.03% 97.47%       1 300265 edu.rit.crypto.inception.IDEA.multiply
+ 177  0.03% 97.50%       1 300303 edu.rit.util.Packing.unpackShortBigEndian
+ 178  0.03% 97.53%       1 300304 edu.rit.util.Packing.packShortBigEndian
+ 179  0.03% 97.56%       1 300264 edu.rit.crypto.inception.IDEA.xor
+ 180  0.03% 97.59%       1 300305 edu.rit.crypto.inception.IDEA.multiply
+ 181  0.03% 97.62%       1 300180 edu.rit.crypto.inception.IDEA.round
+ 182  0.03% 97.65%       1 300306 edu.rit.crypto.inception.IDEA.nextSubkey
+ 183  0.03% 97.68%       1 300307 edu.rit.crypto.inception.IDEA.multiply
+ 184  0.03% 97.71%       1 300308 edu.rit.crypto.inception.IDEA.multiply
+ 185  0.03% 97.74%       1 300309 edu.rit.crypto.inception.IDEA.nextSubkey
+ 186  0.03% 97.77%       1 300263 edu.rit.util.Packing.packShortBigEndian
+ 187  0.03% 97.81%       1 300310 edu.rit.crypto.inception.IDEA.multiply
+ 188  0.03% 97.84%       1 300187 edu.rit.crypto.inception.IDEA.nextSubkey
+ 189  0.03% 97.87%       1 300311 edu.rit.crypto.inception.IDEA.multiply
+ 190  0.03% 97.90%       1 300312 edu.rit.crypto.inception.IDEA.add
+ 191  0.03% 97.93%       1 300106 edu.rit.crypto.inception.IDEA.round
+ 192  0.03% 97.96%       1 300191 edu.rit.util.Packing.unpackShortBigEndian
+ 193  0.03% 97.99%       1 300313 edu.rit.crypto.inception.IDEA.round
+ 194  0.03% 98.02%       1 300314 edu.rit.crypto.inception.IDEA.add
+ 195  0.03% 98.05%       1 300194 edu.rit.crypto.inception.IDEA.add
+ 196  0.03% 98.08%       1 300105 edu.rit.crypto.inception.IDEA.round
+ 197  0.03% 98.11%       1 300262 edu.rit.crypto.inception.IDEA.nextSubkey
+ 198  0.03% 98.15%       1 300315 edu.rit.crypto.inception.IDEA.add
+ 199  0.03% 98.18%       1 300198 edu.rit.crypto.inception.IDEA.multiply
+ 200  0.03% 98.21%       1 300199 edu.rit.crypto.inception.IDEA.multiply
+ 201  0.03% 98.24%       1 300316 edu.rit.crypto.inception.IDEA.multiply
+ 202  0.03% 98.27%       1 300317 edu.rit.util.Packing.packShortBigEndian
+ 203  0.03% 98.30%       1 300202 edu.rit.util.Packing.packShortBigEndian
+ 204  0.03% 98.33%       1 300203 edu.rit.crypto.inception.IDEA.round
+ 205  0.03% 98.36%       1 300318 edu.rit.crypto.inception.IDEA.multiply
+ 206  0.03% 98.39%       1 300319 edu.rit.util.Packing.packShortBigEndian
+ 207  0.03% 98.42%       1 300206 edu.rit.crypto.inception.IDEA.xor
+ 208  0.03% 98.45%       1 300207 edu.rit.crypto.inception.IDEA.nextSubkey
+ 209  0.03% 98.49%       1 300320 edu.rit.crypto.inception.IDEA.round
+ 210  0.03% 98.52%       1 300261 edu.rit.crypto.inception.IDEA.round
+ 211  0.03% 98.55%       1 300210 edu.rit.util.Packing.unpackShortBigEndian
+ 212  0.03% 98.58%       1 300069 java.util.jar.JarFile.initializeVerifier
+ 213  0.03% 98.61%       1 300321 edu.rit.crypto.inception.IDEA.nextSubkey
+ 214  0.03% 98.64%       1 300322 edu.rit.crypto.inception.IDEA.outputTransformation
+ 215  0.03% 98.67%       1 300323 edu.rit.crypto.inception.IDEA.multiply
+ 216  0.03% 98.70%       1 300215 edu.rit.crypto.inception.IDEA.multiply
+ 217  0.03% 98.73%       1 300216 edu.rit.crypto.inception.IDEA.round
+ 218  0.03% 98.76%       1 300217 edu.rit.crypto.inception.IDEA.multiply
+ 219  0.03% 98.79%       1 300260 edu.rit.crypto.inception.IDEA.multiply
+ 220  0.03% 98.83%       1 300219 edu.rit.crypto.inception.IDEA.nextSubkey
+ 221  0.03% 98.86%       1 300220 java.util.Arrays.fill
+ 222  0.03% 98.89%       1 300221 edu.rit.crypto.inception.IDEA.encrypt
+ 223  0.03% 98.92%       1 300222 edu.rit.crypto.inception.IDEA.xor
+ 224  0.03% 98.95%       1 300223 edu.rit.crypto.inception.IDEA.round
+ 225  0.03% 98.98%       1 300099 edu.rit.crypto.inception.IDEA.round
+ 226  0.03% 99.01%       1 300324 edu.rit.crypto.inception.IDEA.multiply
+ 227  0.03% 99.04%       1 300226 edu.rit.crypto.inception.IDEA.round
+ 228  0.03% 99.07%       1 300227 edu.rit.crypto.inception.IDEA.round
+ 229  0.03% 99.10%       1 300228 edu.rit.crypto.inception.IDEA.nextSubkey
+ 230  0.03% 99.13%       1 300325 edu.rit.crypto.inception.IDEA.add
+ 231  0.03% 99.17%       1 300258 edu.rit.crypto.inception.IDEA.xor
+ 232  0.03% 99.20%       1 300231 edu.rit.crypto.inception.IDEA.nextSubkey
+ 233  0.03% 99.23%       1 300326 java.util.Arrays.fill
+ 234  0.03% 99.26%       1 300233 edu.rit.crypto.inception.IDEA.round
+ 235  0.03% 99.29%       1 300327 edu.rit.crypto.inception.IDEA.multiply
+ 236  0.03% 99.32%       1 300235 edu.rit.crypto.inception.IDEA.round
+ 237  0.03% 99.35%       1 300075 edu.rit.util.Packing.packShortBigEndian
+ 238  0.03% 99.38%       1 300328 edu.rit.crypto.inception.IDEA.multiply
+ 239  0.03% 99.41%       1 300238 edu.rit.crypto.inception.IDEA.round
+ 240  0.03% 99.44%       1 300239 edu.rit.crypto.inception.IDEA.add
+ 241  0.03% 99.47%       1 300240 edu.rit.util.Packing.packShortBigEndian
+ 242  0.03% 99.51%       1 300241 edu.rit.crypto.inception.IDEA.nextSubkey
+ 243  0.03% 99.54%       1 300329 edu.rit.util.Packing.packShortBigEndian
+ 244  0.03% 99.57%       1 300243 edu.rit.crypto.inception.IDEA.encrypt
+ 245  0.03% 99.60%       1 300076 edu.rit.util.Packing.packShortBigEndian
+ 246  0.03% 99.63%       1 300245 edu.rit.crypto.inception.IDEA.nextSubkey
+ 247  0.03% 99.66%       1 300300 edu.rit.crypto.inception.IDEA.encrypt
+ 248  0.03% 99.69%       1 300092 edu.rit.util.Packing.packShortBigEndian
+ 249  0.03% 99.72%       1 300248 edu.rit.crypto.inception.IDEA.add
+ 250  0.03% 99.75%       1 300249 edu.rit.util.Packing.packShortBigEndian
+ 251  0.03% 99.78%       1 300250 edu.rit.crypto.inception.IDEA.multiply
+ 252  0.03% 99.81%       1 300251 edu.rit.crypto.inception.IDEA.multiply
+ 253  0.03% 99.85%       1 300252 edu.rit.crypto.inception.IDEA.multiply
+ 254  0.03% 99.88%       1 300253 edu.rit.crypto.inception.IDEA.nextSubkey
+ 255  0.03% 99.91%       1 300127 edu.rit.crypto.inception.IDEA.multiply
+ 256  0.03% 99.94%       1 300255 edu.rit.crypto.inception.IDEA.round
+ 257  0.03% 99.97%       1 300256 edu.rit.crypto.inception.IDEA.add
+ 258  0.03% 100.00%       1 300330 edu.rit.util.Packing.unpackShortBigEndian
+CPU SAMPLES END
