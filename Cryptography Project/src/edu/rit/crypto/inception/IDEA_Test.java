@@ -6,7 +6,7 @@ import java.util.Random;
 
 /**
  * Tests IDEA
- * @author William
+ * @author William, Brian
  *
  */
 public class IDEA_Test
